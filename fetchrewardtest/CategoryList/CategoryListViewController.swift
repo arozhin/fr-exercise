@@ -15,25 +15,36 @@ class CategoryListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.delegate = self
-        tableView.dataSource = self
 
         // instantiate router and vm for the root vc here
         let router = CategoryListRouter(withViewController: self)
         viewModel = CategoryListViewModel(withRouter: router)
-        viewModel.load()
+        setupTableView()
+        reload()
         self.title = viewModel.title()
+    }
 
+    func setupTableView() {
+        tableView.delegate = self
+        tableView.dataSource = self
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 80
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.addTarget(self, action: #selector(reload), for: .valueChanged)
     }
-    
+
+    @objc func reload() {
+        self.tableView.refreshControl?.beginRefreshing()
+        viewModel.load()
+    }
+
 }
 
 extension CategoryListViewController: BaseViewModelDelegate {
 
     func dataUpdated() {
         self.title = viewModel.title()
+        self.tableView.refreshControl?.endRefreshing()
         self.tableView.reloadData()
     }
 
@@ -45,6 +56,7 @@ extension CategoryListViewController: BaseViewModelDelegate {
             }
         }))
         self.present(alert, animated: true)
+        self.tableView.refreshControl?.endRefreshing()
     }
 }
 

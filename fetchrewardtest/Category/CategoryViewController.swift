@@ -15,12 +15,22 @@ class CategoryViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupTableView()
+        reload()
+    }
+
+    func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
-        viewModel.load()
-        self.title = viewModel.title()
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 80
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.addTarget(self, action: #selector(reload), for: .valueChanged)
+    }
+
+    @objc func reload() {
+        self.tableView.refreshControl?.beginRefreshing()
+        viewModel.load()
     }
 
 }
@@ -29,6 +39,7 @@ extension CategoryViewController: BaseViewModelDelegate {
 
     func dataUpdated() {
         self.title = viewModel.title()
+        self.tableView.refreshControl?.endRefreshing()
         self.tableView.reloadData()
     }
 
@@ -45,6 +56,7 @@ extension CategoryViewController: BaseViewModelDelegate {
             }
         }))
         self.present(alert, animated: true)
+        self.tableView.refreshControl?.endRefreshing()
     }
 }
 
