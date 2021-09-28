@@ -50,7 +50,10 @@ class MealDetailsViewModel : BaseViewModel {
     }
 
     func numberOfSections() -> Int {
-        return 3 //TODO: check for video availability
+        if mealVideoUrl() != nil {
+            return 3
+        }
+        return 2 //Instructions and ingredients
     }
 
     func headerTitle(_ section:Int) -> String? {

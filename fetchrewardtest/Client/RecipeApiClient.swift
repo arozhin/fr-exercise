@@ -7,7 +7,11 @@
 
 import Foundation
 
-class RecipeApiClient {
+protocol RecipeApiClientProtocol {
+    func execute(request:RecipeApiRequest, completion:@escaping ([String:Any], Error?)->())
+}
+
+class RecipeApiClient : RecipeApiClientProtocol {
     var settings:Settings
 
     init(withSettings:Settings) {

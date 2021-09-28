@@ -47,6 +47,6 @@ class BaseViewModel {
     }
 
     func db() -> RecipeCache? {
-        return core()?.service.cache
+        return service()?.cache
     }
 }

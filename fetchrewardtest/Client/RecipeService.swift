@@ -11,11 +11,11 @@ import Foundation
 class RecipeService {
     
     var settings:Settings
-    var client:RecipeApiClient
+    var client:RecipeApiClientProtocol
     var cache:RecipeCache
     var parser = RecipeParser()
     
-    init(withSettings:Settings, apiClient:RecipeApiClient, recipeCache:RecipeCache) {
+    init(withSettings:Settings, apiClient:RecipeApiClientProtocol, recipeCache:RecipeCache) {
         settings = withSettings
         client = apiClient
         cache = recipeCache
